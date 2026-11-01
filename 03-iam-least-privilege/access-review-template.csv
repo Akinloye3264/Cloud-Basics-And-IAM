@@ -1,2 +1,4 @@
 identity_type,identity_name,business_purpose,access_source,privileged_access,credential_status,last_used_or_evidence,risk_or_gap,decision,owner,review_date
-role,example-report-reader,Read monthly reports,Identity policy,No,Temporary credentials preferred,Replace with verified evidence,Example row only,Review and scope permissions,Example owner,YYYY-MM-DD
+role,AWSServiceRoleForResourceExplorer,Allow AWS Resource Explorer to index resources,AWS-managed service-linked role,No,Temporary service credentials,Role activity and trust policy reviewed,No excessive access identified in reviewed configuration,Retain,AWS Resource Explorer,2026-11-01
+role,AWSServiceRoleForSupport,Allow AWS Support to provide account support,AWS-managed service-linked role,No,Temporary service credentials,Role inventory reviewed,No excessive access identified in reviewed configuration,Retain,AWS Support,2026-11-01
+role,AWSServiceRoleForTrustedAdvisor,Allow AWS Trusted Advisor to analyze the account,AWS-managed service-linked role,No,Temporary service credentials,Role inventory reviewed,No excessive access identified in reviewed configuration,Retain,AWS Trusted Advisor,2026-11-01
