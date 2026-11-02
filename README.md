@@ -1,131 +1,155 @@
-# Cloud-Basics-And-IAM
+# AWS Account Hardening and IAM Security Lab
 
-The lab follows the order a student should implement the controls in a real AWS account, explains why each control matters, includes commands and policy examples, identifies
-the evidence to capture, and provides a sample solution and resume statements.
+Completed hands-on project that establishes and validates a foundational security baseline for an authorized AWS learning account. The lab covers root-account protection, IAM access review, audit logging, cost monitoring, S3 public-access prevention, evidence collection, and security reporting.
 
-The project also incorporates the Cloud Basics + IAM concepts:
+- **Status:** Completed and validated
+- **Completed:** 2026-11-02
+- **Level:** Beginner
+- **Focus:** AWS IAM, least-privilege analysis, CloudTrail, AWS Budgets, S3 security, and evidence-based reporting
 
-- IAM users, groups, roles, and policies.
-- Least-privilege access.
-- Auditing who has access to what.
-- Detecting and preventing misconfigured public S3 buckets.
-- Logging activity with CloudTrail.
-- Billing alerts and cost awareness.
-- Documenting security decisions and validating the final configuration.
+## Verified results
 
-**Level:** Beginner | **Time:** 3–5 hours | **Focus:** AWS fundamentals, IAM, least privilege, access auditing, CloudTrail, billing alerts, and S3 security.
+| Control | Verified result | Evidence or documentation |
+|---|---|---|
+| Root security | MFA active; both root access-key slots inactive | [Root-security evidence](screenshots/after/) |
+| Routine administration | Separate MFA-protected IAM console user with no access keys | [Setup notes](01-account-setup/setup-notes.md) |
+| IAM access review | 1 user, 1 group, and 3 AWS service-linked roles inventoried | [Access-review summary](03-iam-least-privilege/access-review-summary.md) |
+| Least-privilege analysis | Task-scoped S3 report-reader policy reviewed and explained; not deployed | [Policy review](03-iam-least-privilege/policy-review.md) |
+| Audit logging | Multi-Region CloudTrail records management read/write events | [CloudTrail results](04-cloudtrail/cloudtrail-results.md) |
+| Cost monitoring | Recurring USD 5 monthly budget with a verified 80% actual-cost email alert | [Budget results](05-billing-alerts/billing-alert-results.md) |
+| S3 protection | All four account-level Block Public Access settings enabled | [S3 results](06-s3-protection/s3-protection-results.md) |
+| Final validation | IAM inventory, CloudTrail, and S3 controls confirmed with read-only AWS CLI checks | [Validation results](docs/validation-results.md) |
 
 ## Scenario
 
-You are a junior cloud security engineer at fictional Northstar Digital. Prepare a documented security baseline for a new AWS account, verify each control, and provide evidence another engineer can review.
+As a junior cloud security engineer for fictional Northstar Digital, I prepared a documented baseline for a new AWS account, verified each control, and produced evidence another engineer can review.
 
-> **Safety:** Use an account you own or are authorized to administer. AWS Free Tier eligibility and pricing can change; check current terms before enabling services. Never commit credentials, MFA QR codes,
-recovery codes, account IDs, private billing details, or unredacted screenshots. Do not make a real S3 bucket public for testing.
+The work followed this sequence:
 
-## Learning outcomes
+1. Recorded the authorized learning-account scope.
+2. Verified root MFA and the absence of root access keys.
+3. Established a separate protected identity for routine administration.
+4. Inventoried IAM users, groups, roles, policies, and a service-role trust relationship.
+5. Reviewed a task-scoped S3 policy for least privilege.
+6. Enabled multi-Region CloudTrail management-event logging.
+7. Configured an AWS cost budget and notification.
+8. Enabled all four account-level S3 Block Public Access settings.
+9. Validated the resulting configuration and documented findings.
 
-- Explain root users, IAM users/groups/roles, permission policies, and role trust policies.
-- Protect root access with MFA and avoid using root for routine work.
-- Apply and explain least privilege.
-- Audit users, groups, roles, policies, and trust relationships.
-- Enable CloudTrail management-event logging and verify activity.
-- Configure billing budget notifications.
-- Enable account-level S3 Block Public Access and review bucket exposure.
-- Document decisions, validation evidence, limitations, and remediation.
+## Architecture and control flow
 
-## GitHub repository layout
+~~~text
+Protected administrator
+        |
+        v
+IAM group with documented administrative access
+        |
+        +----> AWS account configuration
+        |          |
+        |          +----> CloudTrail management events
+        |          |          |
+        |          |          v
+        |          |     Private S3 log bucket
+        |          |
+        |          +----> Account-level S3 Block Public Access
+        |
+        +----> AWS Budgets 80% actual-cost email notification
 
-```text
-aws-account-hardening/
-├── README.md
-├── 01-account-setup/account-setup.md
-├── 02-root-security/root-mfa.md
-├── 03-iam-least-privilege/
-│   ├── README.md
-│   ├── access-review-template.csv
-│   └── policies/
-│       ├── s3-report-reader.json
-│       └── s3-security-auditor-readonly.json
-├── 04-cloudtrail/cloudtrail-setup.md
-├── 05-billing-alerts/billing-alerts.md
-├── 06-s3-protection/
-│   ├── README.md
-│   ├── validation-commands.sh
-│   └── policies/bucket-policy-private-transport.json
-├── 07-validation/
-│   ├── validation-checklist.md
-│   └── commands.sh
-├── 08-report/
-│   ├── findings-template.md
-│   └── sample-report.md
-├── 09-resume/
-│   ├── resume-bullets.md
-│   └── interview-notes.md
-├── docs/
-│   ├── architecture.md
-│   ├── decision-log.md
-│   ├── evidence-checklist.md
-│   ├── troubleshooting.md
-│   └── validation-results.md
-└── screenshots/
-    ├── README.md
-    ├── before/.gitkeep
-    └── after/.gitkeep
-```
+Read-only AWS CLI checks ----> Validation results and sanitized evidence
+~~~
 
-## Prerequisites
+See [architecture.md](docs/architecture.md) for the supporting design notes.
 
-- AWS account you control or are authorized to secure.
-- Console access, password manager, and MFA method.
-- Optional AWS CLI v2 for read-only validation.
-- Familiarity with JSON is helpful but not required.
+## Key security decisions
 
-Do not create root access keys. Prefer IAM Identity Center or another approved temporary-credential workflow for human access where practical. Avoid creating long-lived IAM access keys just to complete this lab.
+- Root is reserved for root-only tasks and protected with MFA.
+- Routine administration uses a separate IAM user with MFA and no long-lived access keys.
+- The sole administrator group currently has broad **AdministratorAccess**. This is a documented residual risk requiring restricted membership and periodic review.
+- The sample S3 report-reader policy demonstrates resource and prefix scoping but was reviewed rather than deployed.
+- CloudTrail captures multi-Region management read/write events. S3 object data events were not enabled because they were outside this baseline and can add cost.
+- Account-level S3 Block Public Access is the primary public-access guardrail. Bucket policies, ACLs, access points, and authenticated access still require review.
+- The AWS budget improves cost visibility but is not a hard spending cap.
 
-## Lab sequence and evidence
+Full rationale and evidence references are in the [security decision log](docs/decision-log.md).
 
-| Stage | Task | Evidence |
-|---|---|---|
-| 1 | Select/create a learning account | Redacted setup notes |
-| 2 | Enable root MFA and review root keys | MFA status and root-key status |
-| 3 | Review IAM and least privilege | Policy JSON and access inventory |
-| 4 | Enable CloudTrail | Trail configuration and recent event |
-| 5 | Configure budget notifications | Budget threshold and notification |
-| 6 | Block public S3 access | Four account-level settings enabled |
-| 7 | Validate controls | Completed checklist and results |
-| 8 | Write report and resume bullets | Report, decision log, accurate claims |
+## Repository structure
 
-## Important design note
+~~~text
+.
+|-- 01-account-setup/          Account scope and completed setup notes
+|-- 02-root-security/          Root MFA and access-key guidance
+|-- 03-iam-least-privilege/    IAM inventory, policy examples, and review
+|-- 04-cloudtrail/             Trail instructions and verified results
+|-- 05-billing-alerts/         Budget instructions and verified results
+|-- 06-s3-protection/          S3 controls, policy example, and results
+|-- 07-validation/             Read-only CLI checks and final checklist
+|-- 08-report/                 Findings report and illustrative sample
+|-- 09-resume/                 Evidence-aligned resume and interview notes
+|-- docs/                      Decisions, validation, architecture, evidence
+|-- screenshots/               Sanitized before-and-after evidence
+└-- README.md
+~~~
 
-The primary S3 public-access guardrail in this lab is **account-level S3 Block Public Access with all four settings enabled**. A bucket policy is an additional defense-in-depth control, not a replacement for Block Public Access or a full audit of identity permissions, bucket policies, and ACLs.
+## Validation
 
-## Completion criteria
+The final validation script uses read-only AWS CLI calls:
 
-- [x] Root MFA enabled; no root access keys, or exception documented.
-- [x] Routine administration uses a separate protected identity.
-- [x] IAM users/groups/roles and permission sources reviewed.
-- [x] A least-privilege policy reviewed and explained.
-- [x] CloudTrail multi-Region management-event trail is logging.
-- [x] Budget and at least one notification threshold configured.
+~~~bash
+chmod +x 07-validation/commands.sh
+./07-validation/commands.sh
+~~~
+
+It checks:
+
+- caller identity;
+- IAM users, groups, and roles;
+- CloudTrail trail configuration; and
+- account-level S3 Block Public Access.
+
+The recorded outcome is in [validation-results.md](docs/validation-results.md), and the completed control checklist is in [validation-checklist.md](07-validation/validation-checklist.md).
+
+## Findings and portfolio material
+
+- [Final findings report](08-report/findings-template.md)
+- [Access-review inventory](03-iam-least-privilege/access-review-template.csv)
+- [Evidence checklist](docs/evidence-checklist.md)
+- [Resume bullets](09-resume/resume-bullets.md)
+- [Interview notes](09-resume/interview-notes.md)
+
+## Limitations and remaining risk
+
+- No exploitation or penetration testing was performed.
+- The reviewed least-privilege S3 policy was not attached to an identity.
+- The routine administrator retains broad access.
+- CloudTrail data events, log-file validation, and SSE-KMS encryption were not configured.
+- The review covers the stated baseline, not every AWS service or possible access path.
+- IAM Identity Center was not enabled because the learning-account plan and credit constraints made the required organization setup unsuitable for this lab.
+
+## Safety and evidence handling
+
+Use only an account you own or are authorized to administer. Never commit passwords, access keys, session tokens, MFA QR or recovery material, private billing details, unredacted account IDs, bucket identifiers, or email addresses. The evidence in this repository was cropped or sanitized to exclude sensitive identifiers.
+
+Do not make a real S3 bucket public to test this lab. AWS pricing and free-plan terms can change, so review current service pricing before enabling additional logging or security services.
+
+## Completion record
+
+- [x] Root MFA enabled and root access keys absent.
+- [x] Separate protected identity used for routine administration.
+- [x] IAM identities, permission sources, and a trust relationship reviewed.
+- [x] Least-privilege policy design reviewed and explained.
+- [x] Multi-Region CloudTrail management-event logging validated.
+- [x] Budget and notification threshold configured.
 - [x] All four account-level S3 Block Public Access settings enabled.
-- [x] Before/after evidence captured truthfully and sanitized.
-- [x] Decision log, validation results, and final report completed.
-- [x] Resume wording matches work actually performed.
+- [x] Genuine sanitized before-and-after evidence captured.
+- [x] Decision log, validation results, and findings report completed.
+- [x] Resume wording limited to verified work.
 
-## Official references
+## Official AWS references
 
 - [Root-user best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/root-user-best-practices.html)
 - [IAM security best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
 - [S3 Block Public Access](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-block-public-access.html)
 - [Account-level S3 Block Public Access](https://docs.aws.amazon.com/AmazonS3/latest/userguide/configuring-block-public-access-account.html)
-- [CloudTrail trails](https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-create-and-update-a-trail.html)
-- [AWS Budgets](https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html)
+- [Creating and updating CloudTrail trails](https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-create-and-update-a-trail.html)
+- [Managing costs with AWS Budgets](https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html)
 - [AWS CLI installation](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
-
-## Student completion record
-
-- **Status:** Not started
-- **Date completed:** `YYYY-MM-DD`
-- **Controls verified:** List only controls you checked
-- **Known limitations:** List controls not tested or implemented
-- **Evidence:** Redacted screenshots in `screenshots/`
