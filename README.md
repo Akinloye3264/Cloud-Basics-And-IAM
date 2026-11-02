@@ -101,16 +101,16 @@ The primary S3 public-access guardrail in this lab is **account-level S3 Block P
 
 ## Completion criteria
 
-- [ ] Root MFA enabled; no root access keys, or exception documented.
-- [ ] Routine administration uses a separate protected identity.
-- [ ] IAM users/groups/roles and permission sources reviewed.
-- [ ] A least-privilege policy reviewed and explained.
-- [ ] CloudTrail multi-Region management-event trail is logging.
-- [ ] Budget and at least one notification threshold configured.
-- [ ] All four account-level S3 Block Public Access settings enabled.
-- [ ] Before/after evidence captured truthfully and sanitized.
-- [ ] Decision log, validation results, and final report completed.
-- [ ] Resume wording matches work actually performed.
+- [x] Root MFA enabled; no root access keys, or exception documented.
+- [x] Routine administration uses a separate protected identity.
+- [x] IAM users/groups/roles and permission sources reviewed.
+- [x] A least-privilege policy reviewed and explained.
+- [x] CloudTrail multi-Region management-event trail is logging.
+- [x] Budget and at least one notification threshold configured.
+- [x] All four account-level S3 Block Public Access settings enabled.
+- [x] Before/after evidence captured truthfully and sanitized.
+- [x] Decision log, validation results, and final report completed.
+- [x] Resume wording matches work actually performed.
 
 ## Official references
 

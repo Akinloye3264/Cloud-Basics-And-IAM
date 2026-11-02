@@ -1,17 +1,19 @@
-# Resume Bullets — Use Only What You Actually Completed
+# Resume Bullets — Verified Project Wording
 
-## If all core controls were implemented and verified
-- Hardened a personal AWS learning account by enabling root-user MFA, reviewing IAM permissions for least privilege, enabling multi-Region CloudTrail management-event logging, configuring billing budget notifications, and enabling account-level S3 Block Public Access.
-- Audited IAM users, groups, roles, permission policies, and role trust relationships; documented excessive-permission risks and remediation decisions.
-- Produced a cloud security hardening runbook with policy examples, validation commands, redacted before/after screenshots, a decision log, and a remediation report.
+## Recommended project entry
 
-## If only some controls were completed
-- Practiced AWS account hardening by implementing and documenting **[list only verified controls]**, then validating configuration through the AWS console and/or CLI.
-- Reviewed sample IAM policies and S3 access controls to identify over-permissioning and public-access risks in a controlled learning environment.
-
-## Project entry
 **AWS Account Hardening | Personal Cloud Security Lab**
-- Implemented a foundational AWS security baseline covering root MFA, least-privilege IAM, CloudTrail logging, billing notifications, and S3 Block Public Access.
-- Documented access-review decisions, configuration evidence, validation results, and remaining limitations in a GitHub repository.
 
-Only use the first entry if every listed control was completed and verified. Reviewing an unattached policy is not the same as deploying it.
+- Hardened an authorized AWS learning account by protecting root with MFA and no access keys, establishing a separate MFA-protected administrative identity, enabling multi-Region CloudTrail management-event logging, and applying all four account-level S3 Block Public Access controls.
+- Audited 1 IAM user, 1 IAM group, and 3 AWS service-linked roles; reviewed permission sources and a service-role trust relationship, then documented broad-access risk and retention decisions.
+- Configured and verified a recurring USD 5 AWS cost budget with an 80% actual-cost email alert, and validated IAM inventory, CloudTrail, and S3 guardrails with read-only AWS CLI checks.
+- Produced a security findings report, decision log, access-review inventory, validation checklist, least-privilege S3 policy analysis, and sanitized configuration evidence in a version-controlled repository.
+
+## Short version
+
+- Built and documented an AWS account-hardening lab covering root/IAM protection, multi-Region CloudTrail, cost alerts, and account-level S3 public-access guardrails, with console and CLI validation.
+- Reviewed IAM identities, policies, and trust relationships; recorded residual administrator-access risk and evidence-backed remediation recommendations.
+
+## Accuracy boundary
+
+The task-scoped S3 report-reader policy was reviewed and explained but was not deployed. Do not claim production deployment, penetration testing, organization-wide governance, automated remediation, or complete security coverage.

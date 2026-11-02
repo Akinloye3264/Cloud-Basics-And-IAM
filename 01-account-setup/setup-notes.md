@@ -7,6 +7,9 @@
 - AWS pricing and Free Tier reviewed: Yes
 - Account recovery information reviewed: Yes
 - Root access keys created for this project: No
+- Routine administration identity: `cloud-security-admin`
+- Administrator MFA enabled: Yes
+- Administrator access keys: None
 - AWS CLI used: No
 
 The account was prepared solely as an authorized learning environment. No
@@ -25,3 +28,10 @@ because it contains security-sensitive account metadata.
 The root security controls were already enabled when the review began. No
 before screenshots were captured or fabricated. Sanitized verification
 evidence is stored in `screenshots/after/`.
+
+## Routine administration
+
+Routine console administration now uses the separate `cloud-security-admin`
+IAM identity rather than the root user. The identity is protected by MFA and
+has no programmatic access keys. Root credentials are reserved for tasks that
+specifically require the root user.
